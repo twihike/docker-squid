@@ -12,11 +12,13 @@ RUN install -d -o squid -g squid \
   /var/cache/squid \
   /var/run/squid
 RUN : \
+  && sed -i 's/^#http_access allow localnet$/http_access allow localnet/' /etc/squid/squid.conf \
   && echo 'pid_filename /var/run/squid/${service_name}.pid' >> /etc/squid/squid.conf \
   && echo 'logfile_rotate 0' >> /etc/squid/squid.conf \
   && echo 'access_log stdio:/dev/stdout' >> /etc/squid/squid.conf \
   && echo 'cache_log stdio:/dev/stderr' >> /etc/squid/squid.conf \
   ;
+RUN /usr/sbin/squid --version
 
 USER squid
 EXPOSE 3128
